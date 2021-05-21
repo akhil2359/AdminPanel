@@ -17,7 +17,7 @@ const Login = () => {
 
   const handleLogin = () => {
     if (userName === "Admin" && password === "Admin@1234") {
-      history.push("/add-employee");
+      history.push("/dashboard");
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
