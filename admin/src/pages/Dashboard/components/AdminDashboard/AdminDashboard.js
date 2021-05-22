@@ -199,6 +199,11 @@ const AdminDashboard = ({
           (employee) => !deletedUsers.includes(employee.id)
         )
       );
+      setSelectedFilters({
+        department: "all",
+        location: "all",  
+        age: "all",
+      });
     }
   };
 
@@ -209,6 +214,7 @@ const AdminDashboard = ({
       </Text>
       <StyledDropdown
         placeholder="Department"
+        value={selectedFilters.department}
         name="department"
         options={departmentOptions}
         onChange={(e, data) => {
@@ -217,6 +223,8 @@ const AdminDashboard = ({
       />
       <StyledDropdown
         placeholder="Location"
+        value={selectedFilters.location}
+
         name="location"
         options={locationOptions}
         onChange={(e, data) => {
@@ -225,6 +233,7 @@ const AdminDashboard = ({
       />
       <StyledDropdown
         placeholder="Select Age"
+        value={selectedFilters.age}
         name="age"
         scrolling
         options={getAgeOptions()}
