@@ -13,21 +13,21 @@ const Header = () => (
         </LogoContainer>
         <InfoContainer>
           <LocationContainer>
-            <Text fontSize={14} fontWeight={600} color="#FFF">
+            <Text fontSize={12} fontWeight={600} color="#FFF">
               Telangana,
             </Text>
             <br />
-            <Text fontSize={14} fontWeight={600} color="#FFF" lineHeight={12}>
+            <Text fontSize={12} fontWeight={600} color="#FFF" lineHeight={12}>
               Hyderabad
             </Text>
           </LocationContainer>
           <Space horizontal space={26} />
           <TimeContainer>
-            <Text fontSize={14} fontWeight={600} color="#FFF">
+            <Text fontSize={12} fontWeight={600} color="#FFF">
               Thursday, May 21
             </Text>
             <br />
-            <Text fontSize={14} fontWeight={600} color="#FFF">
+            <Text fontSize={12} fontWeight={600} color="#FFF">
               11: 24 AM, IST
             </Text>
           </TimeContainer>
@@ -45,12 +45,12 @@ const InfoContainer = styled.div`
 const LocationContainer = styled.div`
   border: 1px solid white;
   border-radius: 4px;
-  padding: 9px 20px 0;
+  padding: 0 20px;
 `;
 
 const TimeContainer = styled.div`
   position: relative;
-  top: 9px;
+  top: 2px;
 `;
 
 const HeaderContainer = styled.div`

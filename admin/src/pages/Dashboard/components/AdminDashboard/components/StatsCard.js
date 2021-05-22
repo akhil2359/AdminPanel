@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { PieChart } from "react-minimal-pie-chart";
 import styled from "styled-components";
-import { Image } from "semantic-ui-react";
 
 import Text from "../../../../../components/Text";
 
@@ -15,15 +15,21 @@ const StatsCard = ({ employeeStats }) => {
           Department
         </Text>
         <GraphContainer>
-          <ImageContainer>
-            <Image src="/images/graph.png" width={130} height={130} />
-          </ImageContainer>
+          <ChartContainer>
+            <PieChart
+              viewBoxSize={[240,240]}
+              data={employeeStats}
+              labelPosition={50}
+              lengthAngle={360}
+              lineWidth={40}
+            />
+          </ChartContainer>
           <Counter>
             {employeeStats.map((stats) => (
               <StatsItem>
-                <Circle color={stats.statsColor} />
+                <Circle color={stats.color} />
                 <Text fontSize={14} color="#FFF">
-                  {stats.label} - {stats.total}
+                  {stats.title} - {stats.value}
                 </Text>
               </StatsItem>
             ))}
@@ -38,13 +44,13 @@ const StatsCard = ({ employeeStats }) => {
           {employeeStats.map((statsItem) => (
             <CounterItem>
               <Text fontSize={70} fontWeight={400} color="#FFF">
-                {statsItem.total}
+                {statsItem.value}
               </Text>
               <br />
               <Space vertical space={20} />
               <LabelItem>
                 <Text fontSize={14} color="#FFF">
-                  {statsItem.label}
+                  {statsItem.title}
                 </Text>
               </LabelItem>
             </CounterItem>
@@ -98,21 +104,23 @@ const Counter = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 41px;
-  margin-left: 18px;
+  margin-left: 0px;
+  position: absolute;
+  left: 20%;
 `;
 
 const GraphContainer = styled.div`
   display: flex;
 `;
 
-const ImageContainer = styled.div`
+const ChartContainer = styled.div`
   position: relative;
-  top: 24px;
+  top: 18px;
   right: 6px;
 `;
 
 const StatsContainer = styled.div`
-  height: 25%;
+  height: 30%;
   background: #13449c;
   display: flex;
   padding: 30px 30px 0px;

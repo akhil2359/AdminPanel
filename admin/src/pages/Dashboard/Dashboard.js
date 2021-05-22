@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
 
 import CreateEmployeeForm from "./components/CreateEmployeeForm";
@@ -8,36 +7,61 @@ import AdminDashboard from "./components/AdminDashboard";
 import Text from "../../components/Text";
 import Header from "../../components/Header";
 
-const Dashboard = () => {
-  const [showForm, setShowForm] = useState(false);
+import {
+  defaultEmployeesList,
+  defaultFormState,
+  sideBarOptions,
+} from "../Dashboard/components/AdminDashboard/utils";
 
-  const sideBarOptions = [
-    {
-      label: "Employees",
-      onClick: () => {},
-    },
-    {
-      label: "Organizations",
-      onClick: () => {},
-    },
-    {
-      label: "Users",
-      onClick: () => {},
-    },
-    {
-      label: "Settings",
-      onClick: () => {},
-    },
-  ];
+import { Space } from "../../utils/styles";
+
+import {
+  StyledLabel,
+  BodyContainer,
+  SideBar,
+  StyledOption,
+  Container,
+} from "./style";
+
+const Dashboard = () => {
+  const [showForm, setShowForm] = useState({
+    isOpen: false,
+    isUpdate: false,
+    updateId: null,
+  });
+  const [employeesList, setEmployeesList] = useState(defaultEmployeesList);
+
+  const [formState, setFormState] = useState({ ...defaultFormState });
+  const [activePage, setActivePage] = useState(1);
+
+  const addEmployee = (employee) => {
+    if (employee) {
+      // updates employee
+      if (showForm.isUpdate && showForm.updateId) {
+        let list = employeesList.filter((e) => e.id !== showForm.updateId);
+        list = [{ id: showForm.updateId, ...employee }, ...list];
+        setEmployeesList(list);
+      } else {
+        // adds employee
+        setEmployeesList([
+          { id: employeesList.length + 1, ...employee },
+          ...employeesList,
+        ]);
+      }
+    }
+  };
 
   const renderSideBar = () => (
     <SideBar>
       {sideBarOptions.map((option) => (
         <StyledOption>
-          <Icon disabled name="users" />
-          <Text fontSize={16} color="#FFF">
-            {option.label}
-          </Text>
+          <Icon name={option.icon} inverted color="white" />
+          <Space horizontal space={6} />
+          <StyledLabel>
+            <Text fontSize={16} color="#FFF">
+              {option.label}
+            </Text>
+          </StyledLabel>
         </StyledOption>
       ))}
     </SideBar>
@@ -48,10 +72,25 @@ const Dashboard = () => {
       <Header />
       <BodyContainer>
         {renderSideBar()}
-        {showForm ? (
-          <CreateEmployeeForm setShowForm={setShowForm} />
+        {showForm.isOpen ? (
+          <CreateEmployeeForm
+            setShowForm={setShowForm}
+            showForm={showForm}
+            addEmployee={addEmployee}
+            formState={formState}
+            setFormState={setFormState}
+          />
         ) : (
-          <AdminDashboard />
+          <AdminDashboard
+            setShowForm={setShowForm}
+            showForm={showForm}
+            defaultEmployeesList={employeesList}
+            updateEmployeesList={setEmployeesList}
+            formState={formState}
+            setFormState={setFormState}
+            activePage={activePage}
+            setActivePage={setActivePage}
+          />
         )}
       </BodyContainer>
     </Container>
@@ -59,24 +98,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-const BodyContainer = styled.div`
-  display: flex;
-  width: 100vw;
-  background: #d2e1ed;
-`;
-
-const SideBar = styled.div`
-  width: 20%;
-  background: #13449c;
-  height: 100vw;
-  padding: 40px 0 0 30px;
-`;
-
-const StyledOption = styled.div`
-  margin-top: 20px;
-`;
-
-const Container = styled.div`
-  overflow-x: hidden;
-`;

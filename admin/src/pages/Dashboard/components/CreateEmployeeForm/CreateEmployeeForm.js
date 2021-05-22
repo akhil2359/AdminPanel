@@ -1,27 +1,48 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import { Button } from "semantic-ui-react";
 
 import Text from "../../../../components/Text";
 
-import { Center, Space } from "../../../../utils/styles";
+import { departmentOptions, locationOptions } from "../AdminDashboard/utils";
 
-const CreateEmployeeForm = ({ setShowForm }) => {
-  const defaultFormState = {
-    fullname: "",
-    jobtitle: "",
-    department: "",
-    location: "",
-    age: "",
-    salary: "",
-  };
-  const [formState, setFormState] = useState({ ...defaultFormState });
+import { Space, StyledInput } from "../../../../utils/styles";
 
+import {
+  ActionsContainer,
+  Divider,
+  InputContainer,
+  StyledDropdown,
+  Badge,
+  SaveButton,
+  StyledForm,
+  DetailsPreviewContainer,
+  FormHeader,
+  FormBody,
+} from "./style";
+
+const CreateEmployeeForm = ({
+  showForm,
+  setShowForm,
+  addEmployee,
+  formState,
+  setFormState,
+}) => {
   const formFields = [
-    { label: "Full Name", fieldType: "fullname" },
-    { label: "Job Title", fieldType: "jobtitle" },
-    { label: "Department", fieldType: "department" },
-    { label: "Location", fieldType: "location" },
+    { label: "Full Name", fieldType: "fullname", type: "string" },
+    { label: "Job Title", fieldType: "jobtitle", type: "string" },
+    {
+      label: "Department",
+      fieldType: "department",
+      type: "dropdown",
+      options: departmentOptions,
+    },
+    {
+      label: "Location",
+      fieldType: "location",
+      type: "dropdown",
+      options: locationOptions,
+    },
     { label: "Age", fieldType: "age", type: "number" },
     { label: "Salary", fieldType: "salary", type: "number" },
   ];
@@ -33,14 +54,33 @@ const CreateEmployeeForm = ({ setShowForm }) => {
     setFormState({ ...formState, ...currentState });
   };
 
-  const renderFormField = (label, name, type = "text") => (
+  const renderFormField = (label, name, type = "text", options = {}) => (
     <>
       <Text fontSize={16}>{label}</Text>
-      <Input
-        type={type}
-        placeholder={label}
-        onChange={(e) => handleInputChange(e.target.value, name)}
-      />
+      <br />
+      <InputContainer>
+        {type !== "dropdown" ? (
+          <StyledInput
+            placeholder={label}
+            type={type}
+            value={formState[name]}
+            onChange={(e) => handleInputChange(e.target.value, name)}
+            maxLength={100}
+          />
+        ) : (
+          <StyledDropdown
+            placeholder={label}
+            name={name}
+            options={options}
+            value={formState[name]}
+            onChange={(e, data) => {
+              let currentFormState = { ...formState };
+              currentFormState[name] = data.value;
+              setFormState(currentFormState);
+            }}
+          />
+        )}
+      </InputContainer>
       <Space vertical space={15} />
     </>
   );
@@ -50,7 +90,7 @@ const CreateEmployeeForm = ({ setShowForm }) => {
       <StyledForm>
         <FormHeader>
           <Text fontSize={20} fontWeight={600}>
-            Create Employee
+            {showForm.isUpdate ? "Update" : "Create"} Employee
           </Text>
           <Badge>
             <Text fontSize={12}>60sec</Text>
@@ -58,27 +98,52 @@ const CreateEmployeeForm = ({ setShowForm }) => {
         </FormHeader>
         <FormBody>
           {formFields.map((field) =>
-            renderFormField(field.label, field.fieldType, field.type)
+            renderFormField(
+              field.label,
+              field.fieldType,
+              field.type,
+              field.options
+            )
           )}
         </FormBody>
       </StyledForm>
+      <Divider />
       <DetailsPreviewContainer>
         <ActionsContainer>
-          <SaveButton>
+          <SaveButton
+            onClick={() =>
+              setShowForm({ isOpen: false, isUpdate: false, updateId: null })
+            }
+          >
             <Text fontSize={14} color="gray">
-              Save
+              Cancel
             </Text>
           </SaveButton>
           <Space horizontal space={30} />
-          <StyledButton
+
+          <Button
+            primary
+            disabled={
+              Object.values(formState).filter((e) => e === "").length !== 0
+            }
+            color="blue"
             onClick={() => {
-              setShowForm(false);
+              addEmployee({
+                name: formState["fullname"],
+                jobTitle: formState["jobtitle"],
+                department: formState["department"],
+                location: formState["location"],
+                age: formState["age"],
+                salary: formState["salary"],
+                actions: "Action",
+              });
+              setShowForm({ isOpen: false, isUpdate: false, updateId: null });
             }}
           >
             <Text fontSize={14} fontWeight={600} color="#FFF">
-              Create Employee
+              {showForm.isUpdate ? "Update" : "Create"} Employee
             </Text>
-          </StyledButton>
+          </Button>
         </ActionsContainer>
 
         {formFields.map((field) => (
@@ -100,69 +165,11 @@ const CreateEmployeeForm = ({ setShowForm }) => {
 };
 
 CreateEmployeeForm.prototypes = {
+  showForm: PropTypes.object.isRequired,
   setShowForm: PropTypes.func.isRequired,
+  addEmployee: PropTypes.func.isRequired,
+  formState: PropTypes.object.isRequired,
+  setFormState: PropTypes.func.isRequired,
 };
 
 export default CreateEmployeeForm;
-
-const ActionsContainer = styled.div`
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  display: flex;
-`;
-
-const Badge = styled(Center)`
-  background: lightgray;
-  border-radius: 4px;
-  padding: 10px;
-  position: relative;
-  left: 20px;
-  bottom: 10px;
-`;
-
-const Input = styled.input`
-  padding: 15px;
-  width: 90%;
-  background: white;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  margin: 10px 0;
-  outline: none;
-`;
-
-const SaveButton = styled.div`
-  position: relative;
-  top: 6px;
-`;
-
-const StyledForm = styled.div`
-  width: 40%;
-  height: 100vw;
-  padding: 60px 0 0 80px;
-  background: #f8fcff;
-  border-right: 2px solid gray;
-`;
-
-const DetailsPreviewContainer = styled.div`
-  width: 40%;
-  background: #f8fcff;
-  height: 100vw;
-  padding: 136px 0 0 80px;
-  position: relative;
-`;
-
-const StyledButton = styled.div`
-  background: #13449c;
-  border-radius: 4px;
-  padding: 7px 10px;
-  cursor: pointer;
-`;
-
-const FormHeader = styled.div`
-  display: flex;
-`;
-
-const FormBody = styled.div`
-  margin-top: 40px;
-`;
