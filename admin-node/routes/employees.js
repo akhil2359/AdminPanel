@@ -6,7 +6,14 @@ const connection = mysqlconnect.connection;
 let router = express.Router();
 
 router.get("/", (req, res) => {
-    connection.query("SELECT * FROM employees", (err, rows) => {
+    const {name, location, jobtitle, department, age} = req.query;
+    const ename = `${name ? `${name}%` : '%%'}`;
+    const elocation = `${location ? location : '%%'}`;
+    const edepartment = `${department ? department : '%%'}`;
+    const ejobtitle = `${jobtitle ? `%${jobtitle}%` : '%%'}`;
+    const eage = `${age ? age : '%%'}`;
+
+    connection.query("SELECT * FROM employees WHERE name LIKE ? AND location LIKE ? AND department LIKE ? AND jobtitle LIKE ? AND age LIKE ?", [ename, elocation, edepartment, ejobtitle, eage], (err, rows) => {
       if (err) {
         res.status(400);
         res.send({
@@ -16,7 +23,13 @@ router.get("/", (req, res) => {
         throw err;
       }
       res.status(200);
-      res.send(rows);
+      if(rows.length > 0){
+        res.send(rows);
+      } else {
+        res.send({
+          message: "no results found"
+        })
+      }
       res.end();
     });
   });
