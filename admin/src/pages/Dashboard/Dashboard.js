@@ -24,12 +24,21 @@ import {
 } from "./style";
 
 const Dashboard = () => {
+  let employees = localStorage.getItem("employees");
+
+  if (!employees || (employees && JSON.parse(employees).length <= 0)) {
+    localStorage.setItem("employees", JSON.stringify(defaultEmployeesList));
+    employees = defaultEmployeesList;
+  } else {
+    employees = JSON.parse(employees);
+  }
+
   const [showForm, setShowForm] = useState({
     isOpen: false,
     isUpdate: false,
     updateId: null,
   });
-  const [employeesList, setEmployeesList] = useState(defaultEmployeesList);
+  const [employeesList, setEmployeesList] = useState(employees);
 
   const [formState, setFormState] = useState({ ...defaultFormState });
   const [activePage, setActivePage] = useState(1);
@@ -41,12 +50,20 @@ const Dashboard = () => {
         let list = employeesList.filter((e) => e.id !== showForm.updateId);
         list = [{ id: showForm.updateId, ...employee }, ...list];
         setEmployeesList(list);
+        localStorage.setItem("employees", JSON.stringify(list));
       } else {
         // adds employee
         setEmployeesList([
           { id: employeesList.length + 1, ...employee },
           ...employeesList,
         ]);
+        localStorage.setItem(
+          "employees",
+          JSON.stringify([
+            { id: employeesList.length + 1, ...employee },
+            ...employeesList,
+          ])
+        );
       }
     }
   };
