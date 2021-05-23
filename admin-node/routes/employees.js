@@ -16,19 +16,14 @@ router.get("/", (req, res) => {
     connection.query("SELECT * FROM employees WHERE name LIKE ? AND location LIKE ? AND department LIKE ? AND jobtitle LIKE ? AND age LIKE ?", [ename, elocation, edepartment, ejobtitle, eage], (err, rows) => {
       if (err) {
         res.status(400);
-        res.send({
-          status: "failed",
-          error: err.sqlMessage,
-        });
+        res.send([]);
         throw err;
       }
       res.status(200);
       if(rows.length > 0){
         res.send(rows);
       } else {
-        res.send({
-          message: "no results found"
-        })
+        res.send([])
       }
       res.end();
     });
@@ -36,7 +31,6 @@ router.get("/", (req, res) => {
   
   router.post("/", (req, res) => {
     var reqBody = req.body;
-  
     const name = reqBody.name;
     const jobtitle = reqBody.jobtitle;
     const department = reqBody.department;

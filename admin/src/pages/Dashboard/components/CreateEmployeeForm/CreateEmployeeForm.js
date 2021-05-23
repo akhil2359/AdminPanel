@@ -130,12 +130,11 @@ const CreateEmployeeForm = ({
             onClick={() => {
               addEmployee({
                 name: formState["fullname"],
-                jobTitle: formState["jobtitle"],
+                jobtitle: formState["jobtitle"],
                 department: formState["department"],
                 location: formState["location"],
                 age: formState["age"],
                 salary: formState["salary"],
-                actions: "Action",
               });
               setShowForm({ isOpen: false, isUpdate: false, updateId: null });
             }}

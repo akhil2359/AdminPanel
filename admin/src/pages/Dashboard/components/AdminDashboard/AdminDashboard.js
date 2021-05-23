@@ -30,10 +30,13 @@ const AdminDashboard = ({
   showForm,
   setShowForm,
   defaultEmployeesList,
-  updateEmployeesList,
   setFormState,
   activePage,
   setActivePage,
+  filterParams,
+  setFilterParams,
+  deleteEmployee,
+  getEmployees,
 }) => {
   function exampleReducer(state, action) {
     switch (action.type) {
@@ -51,13 +54,7 @@ const AdminDashboard = ({
   const [defaultEmployees, setDefaultEmployees] = useState(
     defaultEmployeesList
   );
-  const [searchText, setSearchText] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState({
-    department: "all",
-    location: "all",
-    age: "all",
-  });
-  const [deletedUsers, setDeleteUsers] = useState([]);
+  const [deleteUserId, setDeleteUserId] = useState(null);
 
   // hooks
   useEffect(() => {
@@ -77,33 +74,45 @@ const AdminDashboard = ({
       title: "Designers",
       key: "designers",
       color: "#DA4C5B",
-      value: defaultEmployeesList.filter((e) =>
-        e.department.toLowerCase().includes("design")
-      ).length,
+      value:
+        defaultEmployeesList && defaultEmployeesList.length
+          ? defaultEmployeesList.filter((e) =>
+              e.department.toLowerCase().includes("design")
+            ).length
+          : 0,
     },
     {
       title: "Developers",
       key: "developers",
       color: "#B3DD05",
-      value: defaultEmployeesList.filter((e) =>
-        e.department.toLowerCase().includes("develop")
-      ).length,
+      value:
+        defaultEmployeesList && defaultEmployeesList.length
+          ? defaultEmployeesList.filter((e) =>
+              e.department.toLowerCase().includes("develop")
+            ).length
+          : 0,
     },
     {
       title: "Testers",
       key: "testers",
       color: "#4EC6D4",
-      value: defaultEmployeesList.filter((e) =>
-        e.department.toLowerCase().includes("test")
-      ).length,
+      value:
+        defaultEmployeesList && defaultEmployeesList.length
+          ? defaultEmployeesList.filter((e) =>
+              e.department.toLowerCase().includes("test")
+            ).length
+          : 0,
     },
     {
       title: "Managers",
       key: "managers",
       color: "#F86A03",
-      value: defaultEmployeesList.filter((e) =>
-        e.department.toLowerCase().includes("manag")
-      ).length,
+      value:
+        defaultEmployeesList && defaultEmployeesList.length
+          ? defaultEmployeesList.filter((e) =>
+              e.department.toLowerCase().includes("manag")
+            ).length
+          : 0,
     },
   ];
 
@@ -131,75 +140,17 @@ const AdminDashboard = ({
     type = "string",
     employees = defaultEmployees,
   }) => {
-    let filters = { ...selectedFilters };
-    if (value && key) {
-      // updates selected filters state
-      filters[key] = value;
-      setSelectedFilters(filters);
-    }
-
-    let filteredEmployeesList = [];
-    const { department, location, age } = filters;
-    employees.map((employee) => {
-      if (department === "all" && location === "all" && age === "all") {
-        filteredEmployeesList.push(employee);
-        return null;
-      } else if (department !== "all") {
-        if (
-          department.includes(employee.department.toLowerCase()) &&
-          (location === "all" ||
-            (location !== "all" &&
-              location.includes(employee.location.toLowerCase()))) &&
-          (age === "all" || (age !== "all" && age === employee.age))
-        ) {
-          filteredEmployeesList.push(employee);
-          return null;
-        }
-      } else if (location !== "all") {
-        if (
-          location.includes(employee.location.toLowerCase()) &&
-          (department === "all" ||
-            (department !== "all" &&
-              department.includes(employee.department.toLowerCase()))) &&
-          (age === "all" || (age !== "all" && age === employee.age))
-        ) {
-          filteredEmployeesList.push(employee);
-          return null;
-        }
-      } else if (age !== "all") {
-        if (
-          age === employee.age &&
-          (department === "all" ||
-            (department !== "all" &&
-              department.includes(employee.department.toLowerCase()))) &&
-          (location === "all" ||
-            (location !== "all" &&
-              location.includes(employee.location.toLowerCase())))
-        ) {
-          filteredEmployeesList.push(employee);
-          return null;
-        }
-      }
-
-      return filteredEmployeesList;
-    });
-    setEmployeesList(filteredEmployeesList);
-    return filteredEmployeesList;
+    let params = { ...filterParams };
+    params[key] = value === "all" ? undefined : value;
+    setFilterParams(params);
+    getEmployees(params);
   };
 
   const handleDeleteUser = () => {
-    if (deletedUsers.length > 0) {
-      const updatedList = employeesList.filter(
-        (employee) => !deletedUsers.includes(employee.id)
-      );
-      setEmployeesList(updatedList);
-      setDefaultEmployees(updatedList);
-      updateEmployeesList(
-        defaultEmployeesList.filter(
-          (employee) => !deletedUsers.includes(employee.id)
-        )
-      );
+    if (deleteUserId) {
+      deleteEmployee(deleteUserId);
     }
+    setDeleteUserId(null);
   };
 
   const renderActionBar = () => (
@@ -238,7 +189,10 @@ const AdminDashboard = ({
           icon="search"
           placeholder="Search..."
           onChange={(e, data) => {
-            setSearchText(data.value);
+            filterEmployees({
+              value: data.value === "" ? undefined : data.value,
+              key: "name",
+            });
           }}
         />
         <Link>
@@ -269,96 +223,83 @@ const AdminDashboard = ({
         ))}
       </TableHeader>
       <TableBody>
-        {(() => {
-          let filters = employeesList;
-          if (activePage === 1) {
-            filters = filters.filter((e) => e.id <= 10);
-          } else if (activePage === 2) {
-            filters = filters.filter((e) => e.id > 10 && e.id <= 20);
-          } else {
-            filters = filters.filter((e) => e.id > 20 && e.id < 30);
-          }
-
-          return filters
-            .filter((e) =>
-              searchText !== ""
-                ? e.name.toLowerCase().includes(searchText.toLowerCase())
-                : true
-            )
-            .map((employee) => (
-              <RowContainer>
-                {(() => {
-                  const values = [];
-                  Object.keys(employee).forEach((key) => {
-                    if (employee[key] && key !== "id") {
-                      values.push(employee[key]);
-                    }
-                  });
-                  return values.map((value, index) => (
-                    <RowItem>
-                      <>
-                        {(() => {
-                          if (index === values.length - 1) {
-                            return (
-                              <RowActionContainer>
-                                <ButtonWrapper>
-                                  <Button
-                                    primary
-                                    color="blue"
-                                    onClick={() => {
-                                      setShowForm({
-                                        ...showForm,
-                                        isOpen: true,
-                                        isUpdate: true,
-                                        updateId: employee.id,
-                                      });
-                                      setFormState({
-                                        fullname: employee.name,
-                                        jobtitle: employee.jobTitle,
-                                        department: employee.department.toLowerCase(),
-                                        location: employee.location.toLowerCase(),
-                                        age: employee.age,
-                                        salary: parseInt(employee.salary),
-                                      });
-                                    }}
-                                  >
-                                    Edit
-                                  </Button>
-                                </ButtonWrapper>
-                                <Space horizontal space={9} />
-                                <Link>
-                                  <Icon
-                                    color="blue"
-                                    name="trash"
-                                    onClick={() => {
-                                      setDeleteUsers([
-                                        ...deletedUsers,
-                                        employee.id,
-                                      ]);
-                                      dispatch({ type: "open", size: "mini" });
-                                    }}
-                                  />
-                                </Link>
-                              </RowActionContainer>
-                            );
-                          }
+        {employeesList.map((employee, index) => ((index+1) <= activePage *  10) && ((index+1) > (activePage - 1) * 10) &&
+        (
+          <>
+            <RowContainer>
+              {(() => {
+                const values = [];
+                Object.keys(employee).forEach((key) => {
+                  if (employee[key] && key !== "id") {
+                    values.push(employee[key]);
+                  }
+                });
+                return values.map((value, index) => (
+                  <RowItem>
+                    <>
+                      {(() => {
+                        if (index === values.length - 1) {
                           return (
-                            <Text
-                              fontSize={14}
-                              fontWeight={600}
-                              color="#827e7e"
-                            >
-                              {value}{" "}
-                            </Text>
+                            <RowActionContainer>
+                              <ButtonWrapper>
+                                <Button
+                                  primary
+                                  color="blue"
+                                  onClick={() => {
+                                    setShowForm({
+                                      ...showForm,
+                                      isOpen: true,
+                                      isUpdate: true,
+                                      updateId: employee.id,
+                                    });
+                                    setFormState({
+                                      fullname: employee.name,
+                                      jobtitle: employee.jobtitle,
+                                      department: employee.department.toLowerCase(),
+                                      location: employee.location.toLowerCase(),
+                                      age: employee.age,
+                                      salary: parseInt(employee.salary),
+                                    });
+                                  }}
+                                >
+                                  Edit
+                                </Button>
+                              </ButtonWrapper>
+                              <Space horizontal space={9} />
+                              <Link>
+                                <Icon
+                                  color="blue"
+                                  name="trash"
+                                  onClick={() => {
+                                    setDeleteUserId(employee.id);
+                                    dispatch({
+                                      type: "open",
+                                      size: "mini",
+                                    });
+                                  }}
+                                />
+                              </Link>
+                            </RowActionContainer>
                           );
-                        })()}
-                      </>
-                    </RowItem>
-                  ));
-                })()}
-              </RowContainer>
-            ));
-        })()}
+                        }
+                        return (
+                          <Text
+                            fontSize={14}
+                            fontWeight={600}
+                            color="#827e7e"
+                          >
+                            {value}{" "}
+                          </Text>
+                        );
+                      })()}
+                    </>
+                  </RowItem>
+                ));
+              })()}
+            </RowContainer>
+          </>
+        )
+        )}
       </TableBody>
     </TableContainer>
   );
@@ -398,7 +339,13 @@ const AdminDashboard = ({
           ellipsisItem={null}
           firstItem={null}
           lastItem={null}
-          totalPages={3}
+          totalPages={(() => {
+            var val = 1;
+            for (var i = 1; 10 * i < employeesList.length; i++) {
+              val = i + 1;
+            }
+            return val;
+          })()}
           onPageChange={(e, data) => {
             const { activePage } = data;
             setActivePage(activePage);
@@ -413,9 +360,12 @@ AdminDashboard.prototypes = {
   showForm: PropTypes.object.isRequired,
   setShowForm: PropTypes.func.isRequired,
   defaultEmployeesList: PropTypes.array.isRequired,
-  updateEmployeesList: PropTypes.array.isRequired,
   setFormState: PropTypes.func.isRequired,
   activePage: PropTypes.number.isRequired,
   setActivePage: PropTypes.func.isRequired,
+  filterParams: PropTypes.object.isRequired,
+  setFilterParams: PropTypes.func.isRequired,
+  getEmployees: PropTypes.func.isRequired,
+  deleteEmployee: PropTypes.func.isRequired,
 };
 export default AdminDashboard;

@@ -1,9 +1,9 @@
 export const departmentOptions = [
   { key: "all", text: "All", value: "all" },
-  { key: "designers", text: "Designers", value: "designers" },
-  { key: "developers", text: "Developers", value: "developers" },
-  { key: "testers", text: "Testers", value: "testers" },
-  { key: "managers", text: "Managers", value: "managers" },
+  { key: "designers", text: "Designers", value: "designer" },
+  { key: "developers", text: "Developers", value: "developer" },
+  { key: "testers", text: "Testers", value: "tester" },
+  { key: "managers", text: "Managers", value: "manager" },
 ];
 
 export const locationOptions = [

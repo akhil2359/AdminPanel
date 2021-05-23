@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Icon } from "semantic-ui-react";
 
 import CreateEmployeeForm from "./components/CreateEmployeeForm";
@@ -7,10 +8,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import Text from "../../components/Text";
 import Header from "../../components/Header";
 
-import { fetchEmployees } from "../../actions/dashboard";
-
 import {
-  defaultEmployeesList,
   defaultFormState,
   sideBarOptions,
 } from "../Dashboard/components/AdminDashboard/utils";
@@ -31,31 +29,99 @@ const Dashboard = () => {
     isUpdate: false,
     updateId: null,
   });
-  const [employeesList, setEmployeesList] = useState(defaultEmployeesList);
+  const [employeesList, setEmployeesList] = useState([]);
+  const [filterParams, setFilterParams] = useState({
+    name: undefined,
+    jobtitle: undefined,
+    department: undefined,
+    location: undefined,
+    age: undefined,
+  });
 
   const [formState, setFormState] = useState({ ...defaultFormState });
   const [activePage, setActivePage] = useState(1);
 
   // fetches employees from api
   useEffect(() => {
-   fetchEmployees();
-  });
+    getEmployees();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getEmployees = async (params = filterParams) => {
+    axios
+      .get("http://localhost:3001/api/employees", {
+        params: params,
+      })
+      .then(function ({ data }) {
+        if (data) {
+          setEmployeesList(data);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .then(function () {});
+  };
 
   const addEmployee = (employee) => {
     if (employee) {
       // updates employee
       if (showForm.isUpdate && showForm.updateId) {
-        let list = employeesList.filter((e) => e.id !== showForm.updateId);
-        list = [{ id: showForm.updateId, ...employee }, ...list];
-        setEmployeesList(list);
+        axios
+          .put(
+            `http://localhost:3001/api/employees/${showForm.updateId}`,
+            { ...employee },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then(function ({ data }) {
+            getEmployees(filterParams);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       } else {
         // adds employee
-        setEmployeesList([
-          { id: employeesList.length + 1, ...employee },
-          ...employeesList,
-        ]);
+        axios
+          .post(
+            "http://localhost:3001/api/employees",
+            { ...employee },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then(function ({ data }) {
+            getEmployees(filterParams);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       }
     }
+  };
+
+  const deleteEmployee = (id) => {
+     if(id){
+      axios
+      .delete(
+        `http://localhost:3001/api/employees/${id}`,
+        {},
+      )
+      .then(function() {
+        getEmployees(filterParams);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+
+
+     }
   };
 
   const renderSideBar = () => (
@@ -90,13 +156,16 @@ const Dashboard = () => {
         ) : (
           <AdminDashboard
             setShowForm={setShowForm}
+            getEmployees={getEmployees}
+            filterParams={filterParams}
+            setFilterParams={setFilterParams}
             showForm={showForm}
             defaultEmployeesList={employeesList}
-            updateEmployeesList={setEmployeesList}
             formState={formState}
             setFormState={setFormState}
             activePage={activePage}
             setActivePage={setActivePage}
+            deleteEmployee={deleteEmployee}
           />
         )}
       </BodyContainer>

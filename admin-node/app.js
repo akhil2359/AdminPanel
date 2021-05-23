@@ -12,8 +12,13 @@ mysqlconnect.connectMysql();
 
 // middlewares
 app.use(express.json());
-app.use(cors())
-app.use('/api/employees', employeesRouter)
+app.use(cors());
+app.use('/api/employees', employeesRouter);
+
+app.use(function(req,res,next){
+  res.json(req.body);
+  next();
+});
 
 
 app.get("/", (req, res) => {
