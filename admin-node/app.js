@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const mysqlconnect = require("./mysql/connection");
 
 //routers
@@ -11,6 +12,7 @@ mysqlconnect.connectMysql();
 
 // middlewares
 app.use(express.json());
+app.use(cors())
 app.use('/api/employees', employeesRouter)
 
 

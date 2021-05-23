@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "semantic-ui-react";
 
 import CreateEmployeeForm from "./components/CreateEmployeeForm";
@@ -6,6 +6,8 @@ import AdminDashboard from "./components/AdminDashboard";
 
 import Text from "../../components/Text";
 import Header from "../../components/Header";
+
+import { fetchEmployees } from "../../actions/dashboard";
 
 import {
   defaultEmployeesList,
@@ -33,6 +35,11 @@ const Dashboard = () => {
 
   const [formState, setFormState] = useState({ ...defaultFormState });
   const [activePage, setActivePage] = useState(1);
+
+  // fetches employees from api
+  useEffect(() => {
+   fetchEmployees();
+  });
 
   const addEmployee = (employee) => {
     if (employee) {
