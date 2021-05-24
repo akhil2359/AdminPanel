@@ -2,9 +2,8 @@ ONPASSIVE ADMIN PANEL. Using this app you can create, update and track employees
 
 Tech Stack:-  ReactJS, NodeJS,ExpressJS,MYSQL
 
-Postman Collection:- https://www.postman.com/collections/f45fb12a34793479c522
 
-SCREENSHOTS:-
+***-------APP SCREENSHOTS-------:-
 
 
 **1. LOGIN SCREEN**
@@ -38,7 +37,10 @@ SCREENSHOTS:-
 
 
 
-** API DOCUMNTATION **
+**-------API DOCUMENTATION-------**
+
+**Postman Collection**:- https://www.postman.com/collections/f45fb12a34793479c522
+
 
 **1. GET - http://localhost:3001/api/employees**
 
