@@ -5,23 +5,24 @@ Tech Stack:-  ReactJS, NodeJS,ExpressJS,MYSQL
 SCREENSHOTS:-
 
 
-1. LOGIN SCREEN 
+**1. LOGIN SCREEN**
+
 ![Screenshot 2021-05-24 at 8 54 51 AM](https://user-images.githubusercontent.com/32734840/119292460-10d8cc00-bc6e-11eb-93e1-437240fd4f28.png)
 
-2. SIGNUP SCREEN
+**2. SIGNUP SCREEN**
 ![Screenshot 2021-05-24 at 8 55 02 AM](https://user-images.githubusercontent.com/32734840/119292498-24843280-bc6e-11eb-8ca5-42727863e4a0.png)
 
-3.FORGOT PASSWORD SCREEN
+**3.FORGOT PASSWORD SCREEN**
 ![Screenshot 2021-05-24 at 8 55 09 AM](https://user-images.githubusercontent.com/32734840/119292531-35cd3f00-bc6e-11eb-88c6-be750d6d6d7e.png)
 
-4. FORGOT PASSWORD AFTER SENDING RESET LINK TO EMAIL
+**4. FORGOT PASSWORD AFTER SENDING RESET LINK TO EMAIL**
 ![Screenshot 2021-05-24 at 8 55 23 AM](https://user-images.githubusercontent.com/32734840/119292561-467db500-bc6e-11eb-8165-4b0d4d539051.png)
 
-5. RESET PASSSWORD EMAIL PREVIEW 
+**5. RESET PASSSWORD EMAIL PREVIEW **
 
 ![Screenshot 2021-05-24 at 9 00 30 AM](https://user-images.githubusercontent.com/32734840/119292701-8349ac00-bc6e-11eb-8bc1-9b94c567011d.png)
 
-6.ADMIN DASHBOARD PAGE 
+**6.ADMIN DASHBOARD PAGE **
   
 
 
