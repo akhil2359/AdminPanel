@@ -36,3 +36,44 @@ SCREENSHOTS:-
 ![Screenshot 2021-05-24 at 8 56 29 AM](https://user-images.githubusercontent.com/32734840/119292882-e8050680-bc6e-11eb-92e6-96c10a7febeb.png)
 ![Screenshot 2021-05-24 at 9 12 27 AM](https://user-images.githubusercontent.com/32734840/119293512-2f3fc700-bc70-11eb-9d94-4b6811193358.png)
 
+
+
+** API DOCUMNTATION **
+
+**1. GET - http://localhost:3001/api/employees**
+
+This API FETCHES ALL EMPLOYEES
+**Accepted Query Params**:- name,location,salary,age,jobtitle,location
+
+![Screenshot 2021-05-24 at 9 18 12 AM](https://user-images.githubusercontent.com/32734840/119294391-f9034700-bc71-11eb-9899-dfd743a69c3d.png)
+
+
+ 
+
+**2. POST:-   http://localhost:3001/api/employees**
+        Adds new employee
+![Screenshot 2021-05-24 at 9 20 23 AM](https://user-images.githubusercontent.com/32734840/119294428-0d474400-bc72-11eb-802a-415b811496c3.png)
+
+
+**3. PUT - http://localhost:3001/api/employees/:id**
+Updates Employee
+![Screenshot 2021-05-24 at 9 23 49 AM](https://user-images.githubusercontent.com/32734840/119294460-2223d780-bc72-11eb-92b5-8917c88fd073.png)
+
+
+**4. DELETE - http://localhost:3001/api/employees/:id**
+Deletes Employee
+![Screenshot 2021-05-24 at 9 24 15 AM](https://user-images.githubusercontent.com/32734840/119294486-2fd95d00-bc72-11eb-8dc8-256522b52173.png)
+
+
+**5. POST - http://localhost:3001/api/users/signup
+Adds new admin user
+![Screenshot 2021-05-24 at 9 24 25 AM](https://user-images.githubusercontent.com/32734840/119294515-3f58a600-bc72-11eb-99eb-70f0b5d71769.png)
+
+
+**6. POST - http://localhost:3001/api/users/login**
+LOGIN admin user
+![Screenshot 2021-05-24 at 9 24 30 AM](https://user-images.githubusercontent.com/32734840/119294522-48e20e00-bc72-11eb-8d3d-1919c4bb2837.png)
+
+**7. http://localhost:3001/api/users/forgot-password**
+Sends reset link to email
+![Screenshot 2021-05-24 at 9 24 35 AM](https://user-images.githubusercontent.com/32734840/119294541-526b7600-bc72-11eb-8233-958782c6c816.png)
