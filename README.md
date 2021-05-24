@@ -3,7 +3,7 @@ ONPASSIVE ADMIN PANEL. Using this app you can create, update and track employees
 Tech Stack:-  ReactJS, NodeJS,ExpressJS,MYSQL
 
 
-***-------APP SCREENSHOTS-------:-
+***-------APP SCREENSHOTS**-------:-
 
 
 **1. LOGIN SCREEN**
