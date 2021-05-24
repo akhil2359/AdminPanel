@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
+import { Image } from "semantic-ui-react";
 import { Icon, Button, Input, Modal, Pagination } from "semantic-ui-react";
 
 // header stats card
@@ -21,6 +22,7 @@ import {
   RowContainer,
   TableHeader,
   TableBody,
+  EmptyContainer,
   IconsContainer,
   ActionsContainer,
   Container,
@@ -222,6 +224,13 @@ const AdminDashboard = ({
           </RowItem>
         ))}
       </TableHeader>
+      {employeesList.length === 0 && (
+              <EmptyContainer>
+
+          <Image src="https://carmelcollegemodankap.in/Content/images/Carmel/nodata.jpg" width={300} height={300} />
+
+</EmptyContainer>
+      )}
       <TableBody>
         {employeesList.map((employee, index) => ((index+1) <= activePage *  10) && ((index+1) > (activePage - 1) * 10) &&
         (

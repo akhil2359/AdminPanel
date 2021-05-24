@@ -65,6 +65,7 @@ const Dashboard = () => {
       .then(function ({ data }) {
         if (data) {
           setEmployeesList(data);
+          setActivePage(1);
         }
       })
       .catch(function (error) {
