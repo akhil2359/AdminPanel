@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import useReactRouter from "use-react-router";
 import { Image } from "semantic-ui-react";
 
@@ -30,20 +31,60 @@ const Login = () => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isSendLink, setIsSendLink] = useState(false);
   const [isFormValid, setIsFormValid] = useState(true);
+  const [isSignUpValid, setIsSignUpValid] = useState(true);
 
   const { history } = useReactRouter();
 
   const handleLogin = () => {
+    // handle signup here
     if (isSignUp) {
-      if (userName !== "" && password !== "" && email !== "") {
-        history.push("/dashboard");
+      if (userName !== "" && password !== "") {
+        axios
+          .post(
+            "http://localhost:3001/api/users/signup",
+            { username: userName, password: password },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then(function({data}) {
+            if (data.status === "success") {
+              history.push("/dashboard");
+            } else {
+              setIsSignUpValid(false);
+            }
+          })
+          .catch(function (error) {
+            setIsSignUpValid(false);
+            console.log(error);
+          });
       }
     } else {
-      if (userName === "Admin" && password === "Admin@1234") {
-        history.push("/dashboard");
-        setIsFormValid(true);
-      } else {
-        setIsFormValid(false);
+      if (userName !== "" && password !== "") {
+        // handle login here
+        axios
+          .post(
+            "http://localhost:3001/api/users/login",
+            { username: userName, password: password },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then(function ({data}) {
+            if (data.status === "success") {
+              history.push("/dashboard");
+            } else {
+              setIsFormValid(false);
+            }
+          })
+          .catch(function (error) {
+            setIsFormValid(false);
+            console.log(error);
+          });
       }
     }
   };
@@ -73,7 +114,7 @@ const Login = () => {
                 onChange={(e) => setUserName(e.target.value)}
                 maxLength={100}
               />
-              {isSignUp && (
+              {/* {isSignUp && (
                 <StyledInput
                   placeholder="Enter Email"
                   type="email"
@@ -81,7 +122,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   maxLength={100}
                 />
-              )}
+              )} */}
               <StyledInput
                 placeholder="Enter Password"
                 type="password"
@@ -106,6 +147,14 @@ const Login = () => {
                   </Text>
                 </ErrorContainer>
               )}
+              {isSignUp && !isSignUpValid && (
+                  <ErrorContainer>
+                  <Text fontSize={12} color="red" fontWeight={400}>
+                    {" "}
+                    Username already exists, please try other username
+                  </Text>
+                </ErrorContainer>
+              )}
               <Space vertical space={28} />
               <BottomContainer>
                 <StyledButton
@@ -115,6 +164,7 @@ const Login = () => {
                     setPassword("");
                     setEmail("");
                     setIsFormValid(true);
+                    setIsSignUpValid(true);
                   }}
                 >
                   <Text fontSize={14} fontWeight={600} color="#FFF">
