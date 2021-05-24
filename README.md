@@ -18,6 +18,7 @@ SCREENSHOTS:-
 ![Screenshot 2021-05-24 at 8 55 23 AM](https://user-images.githubusercontent.com/32734840/119292561-467db500-bc6e-11eb-8165-4b0d4d539051.png)
 
 5. RESET PASSSWORD EMAIL PREVIEW 
+
 ![Screenshot 2021-05-24 at 9 00 30 AM](https://user-images.githubusercontent.com/32734840/119292701-8349ac00-bc6e-11eb-8bc1-9b94c567011d.png)
 
 6.ADMIN DASHBOARD PAGE 
