@@ -34,13 +34,13 @@ const Login = () => {
   const [isSignUpValid, setIsSignUpValid] = useState(true);
 
   const { history } = useReactRouter();
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   useEffect(() => {
-      if(isLoggedIn){
-        history.push("/dashboard");
-      }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (isLoggedIn) {
+      history.push("/dashboard");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   const handleLogin = () => {
@@ -57,9 +57,9 @@ const Login = () => {
               },
             }
           )
-          .then(function({data}) {
+          .then(function ({ data }) {
             if (data.status === "success") {
-              localStorage.setItem('isLoggedIn', true);
+              localStorage.setItem("isLoggedIn", true);
               history.push("/dashboard");
             } else {
               setIsSignUpValid(false);
@@ -83,9 +83,9 @@ const Login = () => {
               },
             }
           )
-          .then(function ({data}) {
+          .then(function ({ data }) {
             if (data.status === "success") {
-              localStorage.setItem('isLoggedIn', true);
+              localStorage.setItem("isLoggedIn", true);
               history.push("/dashboard");
             } else {
               setIsFormValid(false);
@@ -97,6 +97,26 @@ const Login = () => {
           });
       }
     }
+  };
+
+  const handleForgotPassword = () => {
+    axios
+      .post(
+        "http://localhost:3001/api/users/forgot-password",
+        { email: email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(function ({ data }) {
+        console.log(data);
+      })
+      .catch(function (error) {
+        
+        console.log(error);
+      });
   };
 
   return (
@@ -158,7 +178,7 @@ const Login = () => {
                 </ErrorContainer>
               )}
               {isSignUp && !isSignUpValid && (
-                  <ErrorContainer>
+                <ErrorContainer>
                   <Text fontSize={12} color="red" fontWeight={400}>
                     {" "}
                     Username already exists, please try other username
@@ -214,6 +234,7 @@ const Login = () => {
                   onClick={() => {
                     if (email !== "") {
                       setIsSendLink(true);
+                      handleForgotPassword();
                     }
                   }}
                 >
