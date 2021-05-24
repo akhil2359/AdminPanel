@@ -19,7 +19,7 @@ var transporter = nodemailer.createTransport({
     from: 'akhil2359@gmail.com',
     to: '',
     subject: 'ONPASSIVE-RESET PASSWORD REQUEST',
-    text: 'Dear user, we have received your request to reset password. Please click here to reset your password.'
+    text: 'Dear user, we have received your request to reset password.'
   };
 
 // adds new user
@@ -103,6 +103,8 @@ router.post("/forgot-password", (req, res) => {
     const email = reqBody.email;
   
     transporter.sendMail({...mailOptions, to: email,
+        html: '<p>Dear OnPassive user, we have received your request to reset password.Click <a href="http://localhost:3000/onpassive/login">here</a> to reset your password</p>'
+
     }, function(error, info){
         if (error) {
           console.log(error);
