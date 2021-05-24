@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import useReactRouter from "use-react-router";
 import { Icon } from "semantic-ui-react";
 
 import CreateEmployeeForm from "./components/CreateEmployeeForm";
@@ -20,6 +21,7 @@ import {
   BodyContainer,
   SideBar,
   StyledOption,
+  SignOut,
   Container,
 } from "./style";
 
@@ -41,11 +43,19 @@ const Dashboard = () => {
   const [formState, setFormState] = useState({ ...defaultFormState });
   const [activePage, setActivePage] = useState(1);
 
+  const { history } = useReactRouter();
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+
   // fetches employees from api
   useEffect(() => {
-    getEmployees();
+    // if not logged in, redirect to login page
+    if (!isLoggedIn) {
+      history.push("/login");
+    } else {
+      getEmployees();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoggedIn]);
 
   const getEmployees = async (params = filterParams) => {
     axios
@@ -106,22 +116,16 @@ const Dashboard = () => {
   };
 
   const deleteEmployee = (id) => {
-     if(id){
+    if (id) {
       axios
-      .delete(
-        `http://localhost:3001/api/employees/${id}`,
-        {},
-      )
-      .then(function() {
-        getEmployees(filterParams);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-
-
-     }
+        .delete(`http://localhost:3001/api/employees/${id}`, {})
+        .then(function () {
+          getEmployees(filterParams);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
   const renderSideBar = () => (
@@ -137,6 +141,20 @@ const Dashboard = () => {
           </StyledLabel>
         </StyledOption>
       ))}
+      <SignOut
+        onClick={() => {
+          localStorage.removeItem("isLoggedIn");
+          history.push("/login");
+        }}
+      >
+        <Icon name="sign-out" inverted color="white" />
+        <Space horizontal space={6} />
+        <StyledLabel>
+          <Text fontSize={16} color="#FFF">
+            Sign out
+          </Text>
+        </StyledLabel>
+      </SignOut>
     </SideBar>
   );
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import useReactRouter from "use-react-router";
 import { Image } from "semantic-ui-react";
@@ -34,6 +34,14 @@ const Login = () => {
   const [isSignUpValid, setIsSignUpValid] = useState(true);
 
   const { history } = useReactRouter();
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+  useEffect(() => {
+      if(isLoggedIn){
+        history.push("/dashboard");
+      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
 
   const handleLogin = () => {
     // handle signup here
@@ -51,6 +59,7 @@ const Login = () => {
           )
           .then(function({data}) {
             if (data.status === "success") {
+              localStorage.setItem('isLoggedIn', true);
               history.push("/dashboard");
             } else {
               setIsSignUpValid(false);
@@ -76,6 +85,7 @@ const Login = () => {
           )
           .then(function ({data}) {
             if (data.status === "success") {
+              localStorage.setItem('isLoggedIn', true);
               history.push("/dashboard");
             } else {
               setIsFormValid(false);

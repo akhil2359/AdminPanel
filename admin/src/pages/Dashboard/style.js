@@ -25,6 +25,13 @@ export const StyledOption = styled.div`
   cursor: pointer;
 `;
 
+
+export const SignOut = styled.div`
+  margin-top: 356px;
+  display: flex;
+  cursor: pointer;
+`;
+
 export const Container = styled.div`
   overflow-x: hidden;
 `;
