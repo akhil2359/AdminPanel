@@ -1,6 +1,14 @@
 ONPASSIVE ADMIN PANEL. Using this app you can create, update and track employees.
 
+Live Url:- http://www.akhilapps.com/
+
 Tech Stack:-  ReactJS, NodeJS,ExpressJS,MYSQL
+
+Branches:-
+
+1. Main (Without node integration - REACT)
+2. adminpanel-integration(With Node Api integration - REACT, NODE)
+
 
 
 ***-------APP SCREENSHOTS**-------:-
