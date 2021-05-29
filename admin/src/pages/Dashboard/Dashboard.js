@@ -59,8 +59,13 @@ const Dashboard = () => {
 
   const getEmployees = async (params = filterParams) => {
     axios
-      .get("http://localhost:3001/api/employees", {
+      .get("https://akhilsapps.herokuapp.com/api/employees", {
         params: params,
+        crossdomain: true,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        },
       })
       .then(function ({ data }) {
         if (data) {
@@ -80,11 +85,14 @@ const Dashboard = () => {
       if (showForm.isUpdate && showForm.updateId) {
         axios
           .put(
-            `http://localhost:3001/api/employees/${showForm.updateId}`,
+            `https://akhilsapps.herokuapp.com/api/employees/${showForm.updateId}`,
             { ...employee },
             {
+              crossdomain: true,
               headers: {
-                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":
+                  "GET,PUT,POST,DELETE,PATCH,OPTIONS",
               },
             }
           )
@@ -98,11 +106,14 @@ const Dashboard = () => {
         // adds employee
         axios
           .post(
-            "http://localhost:3001/api/employees",
+            "https://akhilsapps.herokuapp.com/api/employees",
             { ...employee },
             {
+              crossdomain: true,
               headers: {
-                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":
+                  "GET,PUT,POST,DELETE,PATCH,OPTIONS",
               },
             }
           )
@@ -119,7 +130,7 @@ const Dashboard = () => {
   const deleteEmployee = (id) => {
     if (id) {
       axios
-        .delete(`http://localhost:3001/api/employees/${id}`, {})
+        .delete(`https://akhilsapps.herokuapp.com/api/employees/${id}`, {})
         .then(function () {
           getEmployees(filterParams);
         })

@@ -49,11 +49,14 @@ const Login = () => {
       if (userName !== "" && password !== "") {
         axios
           .post(
-            "http://localhost:3001/api/users/signup",
+            "https://akhilsapps.herokuapp.com/api/users/signup",
             { username: userName, password: password },
             {
+              crossdomain: true,
               headers: {
-                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":
+                  "GET,PUT,POST,DELETE,PATCH,OPTIONS",
               },
             }
           )
@@ -75,11 +78,13 @@ const Login = () => {
         // handle login here
         axios
           .post(
-            "http://localhost:3001/api/users/login",
+            "https://akhilsapps.herokuapp.com/api/users/login",
             { username: userName, password: password },
             {
               headers: {
-                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods":
+                  "GET,PUT,POST,DELETE,PATCH,OPTIONS",
               },
             }
           )
@@ -102,11 +107,12 @@ const Login = () => {
   const handleForgotPassword = () => {
     axios
       .post(
-        "http://localhost:3001/api/users/forgot-password",
+        "https://akhilsapps.herokuapp.com/api/users/forgot-password",
         { email: email },
         {
           headers: {
-            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
           },
         }
       )
@@ -114,7 +120,6 @@ const Login = () => {
         console.log(data);
       })
       .catch(function (error) {
-        
         console.log(error);
       });
   };
