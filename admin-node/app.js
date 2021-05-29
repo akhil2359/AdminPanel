@@ -9,7 +9,7 @@ const usersRouter = require('./routes/users');
 const app = express();
 
 //configures Mysql and creates a connection
-// mysqlconnect.connectMysql();
+mysqlconnect.connectMysql();
 
 // middlewares
 app.use(express.json());
@@ -21,9 +21,9 @@ app.use(cors());
 // });
 
 
-// app.use('/api/employees', employeesRouter);
+app.use('/api/employees', employeesRouter);
 
-// app.use('/api/users', usersRouter);
+app.use('/api/users', usersRouter);
 
 
 app.get("/", (req, res) => {
