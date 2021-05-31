@@ -58,7 +58,7 @@ const Login = () => {
       if (!!userName && !!password && !!email) {
         axios
           .post(
-            "http://localhost:3001/api/users/signup",
+            "https://akhilsapps.herokuapp.com/api/users/signup",
             { username: userName, password: password, email: email },
             {
               crossdomain: true,
@@ -87,7 +87,7 @@ const Login = () => {
         // handle login here
         axios
           .post(
-            "http://localhost:3001/api/users/login",
+            "https://akhilsapps.herokuapp.com/api/users/login",
             { email: email, password: password },
             {
               headers: {
@@ -116,7 +116,7 @@ const Login = () => {
   const handleForgotPassword = () => {
     axios
       .post(
-        "http://localhost:3001/api/users/forgot-password",
+        "https://akhilsapps.herokuapp.com/api/users/forgot-password",
         { email: forgotEmail },
         {
           headers: {

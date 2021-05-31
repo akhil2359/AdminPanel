@@ -59,7 +59,7 @@ const Dashboard = () => {
 
   const getEmployees = async (params = filterParams) => {
     axios
-      .get("http://localhost:3001/api/employees", {
+      .get("https://akhilsapps.herokuapp.com/api/employees", {
         params: params,
         crossdomain: true,
         headers: {
@@ -85,7 +85,7 @@ const Dashboard = () => {
       if (showForm.isUpdate && showForm.updateId) {
         axios
           .put(
-            `http://localhost:3001/api/employees/${showForm.updateId}`,
+            `https://akhilsapps.herokuapp.com/api/employees/${showForm.updateId}`,
             { ...employee },
             {
               crossdomain: true,
@@ -106,7 +106,7 @@ const Dashboard = () => {
         // adds employee
         axios
           .post(
-            "http://localhost:3001/api/employees",
+            "https://akhilsapps.herokuapp.com/api/employees",
             { ...employee },
             {
               crossdomain: true,
@@ -130,7 +130,7 @@ const Dashboard = () => {
   const deleteEmployee = (id) => {
     if (id) {
       axios
-        .delete(`http://localhost:3001/api/employees/${id}`, {})
+        .delete(`https://akhilsapps.herokuapp.com/api/employees/${id}`, {})
         .then(function () {
           getEmployees(filterParams);
         })

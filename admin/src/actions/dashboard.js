@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const fetchEmployees = async (params = {}) => {
   axios
-    .get("http://localhost:3001/api/employees", {
+    .get("https://akhilsapps.herokuapp.com/api/employees", {
       params: params,
       crossdomain: true,
       headers: {
