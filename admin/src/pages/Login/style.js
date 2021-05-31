@@ -15,7 +15,7 @@ export const InfoContainer = styled.div`
 `;
 
 export const Link = styled.span`
-  cursor: pointer;
+  cursor: ${({ disable = false }) => (disable ? "not-allowed" : "pointer")}
 `;
 
 export const Container = styled.div`
@@ -85,6 +85,7 @@ export const StyledButton = styled.div`
   border-radius: 4px;
   padding: 7px 10px;
   cursor: pointer;
+  opacity: ${({ disabled }) => (disabled ? "0.4" : "1")}
 `;
 
 export const ErrorContainer = styled.div`

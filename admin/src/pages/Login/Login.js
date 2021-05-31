@@ -5,6 +5,8 @@ import { Image } from "semantic-ui-react";
 
 import Text from "../../components/Text";
 
+import { isEmailValid } from "./util";
+
 import { Space } from "../../utils/styles";
 
 import {
@@ -24,9 +26,14 @@ import {
 } from "./style";
 
 const Login = () => {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const defaultFormState = {
+    userName: "",
+    password: "",
+    email: "",
+    forgotEmail: "",
+  };
+
+  const [formState, setFormState] = useState(defaultFormState);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isSendLink, setIsSendLink] = useState(false);
@@ -43,14 +50,16 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
+  const { userName, password, email, forgotEmail } = formState;
+
   const handleLogin = () => {
     // handle signup here
     if (isSignUp) {
-      if (userName !== "" && password !== "") {
+      if (!!userName && !!password && !!email) {
         axios
           .post(
-            "https://akhilsapps.herokuapp.com/api/users/signup",
-            { username: userName, password: password },
+            "http://localhost:3001/api/users/signup",
+            { username: userName, password: password, email: email },
             {
               crossdomain: true,
               headers: {
@@ -74,12 +83,12 @@ const Login = () => {
           });
       }
     } else {
-      if (userName !== "" && password !== "") {
+      if (!!email && password !== "") {
         // handle login here
         axios
           .post(
-            "https://akhilsapps.herokuapp.com/api/users/login",
-            { username: userName, password: password },
+            "http://localhost:3001/api/users/login",
+            { email: email, password: password },
             {
               headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -107,8 +116,8 @@ const Login = () => {
   const handleForgotPassword = () => {
     axios
       .post(
-        "https://akhilsapps.herokuapp.com/api/users/forgot-password",
-        { email: email },
+        "http://localhost:3001/api/users/forgot-password",
+        { email: forgotEmail },
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -122,6 +131,15 @@ const Login = () => {
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  const isLoginDisabled = () => {
+    const isUserNameAndPasswordValid = !!email && !!password;
+    if (isSignUp) {
+      return isUserNameAndPasswordValid && !!userName && isEmailValid(email);
+    } else {
+      return isUserNameAndPasswordValid;
+    }
   };
 
   return (
@@ -142,27 +160,34 @@ const Login = () => {
           <Space vertical space={20} />
           {!isForgotPassword ? (
             <>
-              <StyledInput
-                placeholder="Enter User Name"
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                maxLength={100}
-              />
-              {/* {isSignUp && (
+              {isSignUp && (
                 <StyledInput
-                  placeholder="Enter Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter User Name"
+                  type="text"
+                  value={userName}
+                  onChange={(e) =>
+                    setFormState({ ...formState, userName: e.target.value })
+                  }
                   maxLength={100}
                 />
-              )} */}
+              )}
+              <StyledInput
+                placeholder="Enter Email"
+                type="email"
+                value={email}
+                error={email.length && !isEmailValid(email)}
+                onChange={(e) =>
+                  setFormState({ ...formState, email: e.target.value })
+                }
+                maxLength={100}
+              />
               <StyledInput
                 placeholder="Enter Password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) =>
+                  setFormState({ ...formState, password: e.target.value })
+                }
                 maxLength={100}
               />
               <ForgotPasswordContainer
@@ -186,18 +211,17 @@ const Login = () => {
                 <ErrorContainer>
                   <Text fontSize={12} color="red" fontWeight={400}>
                     {" "}
-                    Username already exists, please try other username
+                    Email already exists, please try with other email
                   </Text>
                 </ErrorContainer>
               )}
               <Space vertical space={28} />
               <BottomContainer>
                 <StyledButton
+                  disabled={false}
                   onClick={() => {
                     setIsSignUp(!isSignUp);
-                    setUserName("");
-                    setPassword("");
-                    setEmail("");
+                    setFormState(defaultFormState);
                     setIsFormValid(true);
                     setIsSignUpValid(true);
                   }}
@@ -206,7 +230,10 @@ const Login = () => {
                     {isSignUp ? "Back to Login" : "New? Sign Up"}
                   </Text>
                 </StyledButton>
-                <StyledButton onClick={handleLogin}>
+                <StyledButton
+                  onClick={handleLogin}
+                  disabled={!isLoginDisabled()}
+                >
                   <Text fontSize={14} fontWeight={600} color="#FFF">
                     {isSignUp ? "Sign Up" : "Login Now"}
                   </Text>
@@ -218,10 +245,11 @@ const Login = () => {
               <StyledInput
                 placeholder="Enter your Email"
                 type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                error={!!forgotEmail && !isEmailValid(forgotEmail)}
+                value={forgotEmail}
+                onChange={(e) =>
+                  setFormState({ ...formState, forgotEmail: e.target.value })
+                }
                 maxLength={100}
               />
               <br />
@@ -236,14 +264,24 @@ const Login = () => {
 
               <ForgotPasswordBottomContainer>
                 <Link
+                  disable={
+                    !!!forgotEmail ||
+                    (!!forgotEmail && !isEmailValid(forgotEmail))
+                  }
                   onClick={() => {
-                    if (email !== "") {
+                    if (forgotEmail !== "") {
                       setIsSendLink(true);
                       handleForgotPassword();
                     }
                   }}
                 >
-                  <Text fontSize={14} color="gray">
+                  <Text
+                    fontSize={14}
+                    color="gray"
+                    opacity={
+                      !!forgotEmail && isEmailValid(forgotEmail) ? 1 : 0.5
+                    }
+                  >
                     {isSendLink ? "Resend" : "Send"} Link
                   </Text>
                 </Link>
@@ -251,7 +289,7 @@ const Login = () => {
                   onClick={() => {
                     setIsForgotPassword(false);
                     setIsSignUp(false);
-                    setEmail("");
+                    setFormState(defaultFormState);
                   }}
                 >
                   <Text fontSize={14} color="gray">
